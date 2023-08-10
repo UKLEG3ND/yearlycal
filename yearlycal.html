@@ -1,0 +1,165 @@
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yearly Calendars</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: lightblue;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 50px auto;
+    max-width: 1200px;
+  }
+
+
+
+  .calendar-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .calendar-group {
+    display: flex;
+    flex-basis: calc(33.33% - 20px);
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .calendar {
+    flex-basis: calc(33.33% - 20px);
+    border: 1px solid #ccc;
+    margin: 15px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .year-buttons {
+    margin: 20px 0;
+	
+  }
+
+  #yearMessage {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Yearly Calendars (2023 - 2033)</h1>
+  <div class="year-buttons">
+    <!-- Add buttons for the next 10 years -->
+    <button class="year-button" data-year="2023">2023</button>
+    <button class="year-button" data-year="2024">2024</button>
+    <button class="year-button" data-year="2025">2025</button>
+    <button class="year-button" data-year="2026">2026</button>
+    <button class="year-button" data-year="2027">2027</button>
+    <button class="year-button" data-year="2028">2028</button>
+    <button class="year-button" data-year="2029">2029</button>
+    <button class="year-button" data-year="2030">2030</button>
+    <button class="year-button" data-year="2031">2031</button>
+    <button class="year-button" data-year="2032">2032</button>
+    <button class="year-button" data-year="2033">2033</button>
+  </div>
+  <div id="yearMessage"></div>
+  <div class="calendar-container">
+    <!-- Calendars will be displayed here -->
+  </div>
+</div>
+<script>
+  function generateCalendar(year) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const calendarDiv = document.createElement('div');
+    calendarDiv.classList.add('calendar-group');
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex += 3) {
+      const groupDiv = document.createElement('div');
+      groupDiv.classList.add('calendar');
+
+      for (let i = 0; i < 3; i++) {
+        const currentMonthIndex = monthIndex + i;
+        if (currentMonthIndex >= 12) break;
+
+        const monthName = months[currentMonthIndex];
+        const daysInMonth = new Date(year, currentMonthIndex + 1, 0).getDate();
+
+        const monthTable = document.createElement('table');
+        monthTable.innerHTML = `
+          <caption>${monthName}</caption>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        `;
+
+        let day = 1;
+        for (let week = 0; day <= daysInMonth; week++) {
+          const row = document.createElement('tr');
+          for (let weekday = 0; weekday < 7; weekday++) {
+            const cell = document.createElement('td');
+            if (week === 0 && weekday < new Date(year, currentMonthIndex, 1).getDay()) {
+              cell.textContent = '';
+            } else if (day > daysInMonth) {
+              break;
+            } else {
+              cell.textContent = day;
+              day++;
+            }
+            row.appendChild(cell);
+          }
+          monthTable.appendChild(row);
+        }
+
+        groupDiv.appendChild(monthTable);
+      }
+
+      calendarDiv.appendChild(groupDiv);
+    }
+
+    return calendarDiv;
+  }
+
+  const calendarContainer = document.querySelector('.calendar-container');
+  const yearButtons = document.querySelectorAll('.year-button');
+  const yearMessage = document.getElementById('yearMessage');
+
+  yearButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selectedYear = parseInt(button.getAttribute('data-year'));
+      calendarContainer.innerHTML = '';
+      const calendar = generateCalendar(selectedYear);
+      calendarContainer.appendChild(calendar);
+      yearMessage.textContent = `You are viewing the ${selectedYear} calendar.`;
+    });
+  });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
